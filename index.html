@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data center filings in Prince William County since overlay reform began</title>
+<meta name="description" content="Tracker of data center land-use filings in Prince William County, VA during the DCOZOD (DPA2026-00006) 90-day eligibility window.">
+<style>
+  :root { --br:#1f5f99; --leg:#e08a1e; --sq:#2e7d4f; --win:#e3edf7; --ink:#1d1d1f; --muted:#5b5b60; --line:#e3e3e6; --bg:#fafafa; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color:var(--ink); background:var(--bg); line-height:1.45; }
+  main { max-width: 1000px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: clamp(1.35rem, 4.2vw, 2rem); margin: 8px 0 4px; line-height:1.2; }
+  h2 { font-size: 1.2rem; margin: 28px 0 10px; }
+  .sub { color: var(--muted); margin: 0 0 16px; font-size: .95rem; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .countdown { text-align:center; margin-bottom:16px; }
+  .countdown .label { color:var(--muted); font-size:.95rem; }
+  .cd { display:flex; justify-content:center; gap: clamp(8px, 3vw, 28px); margin:8px 0 4px; flex-wrap:wrap; }
+  .cd div { min-width: 70px; }
+  .cd b { display:block; font-size: clamp(2rem, 9vw, 3.4rem); font-variant-numeric: tabular-nums; line-height:1.05; color:var(--br); }
+  .cd span { font-size:.8rem; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+  .stats { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-bottom:16px; }
+  .stat .v { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .k { font-size: .85rem; color: var(--muted); }
+  .toolbar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+  .toggle { display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden; }
+  .toggle button { border:0; background:#fff; padding:7px 14px; font:inherit; font-size:.9rem; cursor:pointer; color:var(--ink); }
+  .toggle button[aria-pressed="true"] { background:var(--ink); color:#fff; }
+  .legend { display:flex; gap:14px; flex-wrap:wrap; font-size:.85rem; color:var(--muted); }
+  .legend i { display:inline-block; width:12px; height:12px; border-radius:2px; vertical-align:-1px; margin-right:5px; }
+  #chart { position:relative; width:100%; }
+  #chart svg { display:block; width:100%; height:auto; }
+  #tip { position:absolute; pointer-events:none; background:#fff; border:1px solid #ccc; border-radius:8px; padding:8px 10px; font-size:.82rem; box-shadow:0 4px 14px rgba(0,0,0,.12); max-width:260px; display:none; z-index:2; }
+  #tip b { display:block; margin-bottom:2px; }
+  .tablewrap { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; font-size:.88rem; background:#fff; }
+  th, td { padding:8px 8px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+  th { position:sticky; top:0; background:#f3f3f5; cursor:pointer; white-space:nowrap; user-select:none; }
+  th[aria-sort="ascending"]::after { content:" ▲"; font-size:.7em; } th[aria-sort="descending"]::after { content:" ▼"; font-size:.7em; }
+  td.num { text-align:right; font-variant-numeric: tabular-nums; white-space:nowrap; }
+  tr.excl td { color:#8a8a8f; background:#fbfbfb; }
+  .pill { display:inline-block; padding:1px 8px; border-radius:999px; font-size:.75rem; color:#fff; white-space:nowrap; }
+  .pill.br { background:var(--br); } .pill.leg { background:var(--leg); } .pill.ex { background:#9a9aa0; }
+  .small { font-size:.85rem; color:var(--muted); }
+  .method li { margin-bottom:6px; }
+  a { color:#1a5fb4; }
+  footer { margin:28px 0 12px; font-size:.85rem; color:var(--muted); }
+  @media (max-width:600px) { th:nth-child(2), td:nth-child(2), th:nth-child(6), td:nth-child(6) { display:none; } main { padding:12px; } table { font-size:.82rem; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Data center filings in Prince William County since overlay reform began</h1>
+  <p class="sub">Data center land-use filings submitted since the first Planning Commission hearing on the Data Center Opportunity Zone Overlay District amendment (DPA2026-00006), Jul 15, 2026. <span id="updated-top"></span></p>
+
+  <section class="card countdown" aria-live="polite">
+    <div class="label">Time left to file and have it accepted under the 90-day eligibility window (closes 11:59 PM ET, Dec 21, 2026)</div>
+    <div class="cd" id="cd"><div><b id="cd-d">–</b><span>days</span></div><div><b id="cd-h">–</b><span>hours</span></div><div><b id="cd-m">–</b><span>minutes</span></div><div><b id="cd-s">–</b><span>seconds</span></div></div>
+    <div class="label" id="cd-note"></div>
+  </section>
+
+  <section class="stats" id="stats" aria-label="Headline statistics"></section>
+
+  <section class="card">
+    <div class="toolbar">
+      <div class="toggle" role="group" aria-label="Chart view">
+        <button id="v-f" aria-pressed="true">Filings</button><button id="v-s" aria-pressed="false">Square feet</button>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div id="chart"><div id="tip" role="tooltip"></div></div>
+    <p class="small" style="margin:6px 0 0">Cumulative, by submission date. Hover or tap a step to see the filing. The shaded area is the 90-day window (Sep 22 – Dec 21).</p>
+  </section>
+
+  <h2>All filings</h2>
+  <p class="small">Tap a column header to sort. Rows in grey are listed for completeness but not counted (see Methodology).</p>
+  <div class="tablewrap card" style="padding:0">
+    <table id="tbl">
+      <thead><tr>
+        <th data-k="project">Project</th><th data-k="app_type">Type</th><th data-k="filed_date" aria-sort="ascending">Filed</th>
+        <th data-k="sqft">Sq ft</th><th data-k="category">Category</th><th data-k="status">Status</th><th data-k="src">Source</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <h2>Methodology and limits</h2>
+  <div class="card method">
+    <ul>
+      <li><b>Dates are submission dates, not acceptance dates.</b> Under the ordinance (Sec. 32-509.02(2)(e)), what counts is when county staff accept a filing for quality-control review, which happens after the initial fees are paid. The county permit portal shows when a plan was submitted but not when it was accepted. Some filings show "Awaiting Fees".</li>
+      <li><b>What is counted:</b> filings submitted on or after Jul 15, 2026 for data center development or an electric substation public facilities review. These are final site plans (by-right) and special use permits, rezonings and proffer amendments (legislative). Site plan revisions, building permits, studies and waivers are not counted.</li>
+      <li><b>Square feet</b> are summed only where a figure is published: county GIS planned gross floor area, or the application as reported. Filings without a published size count as filings but add nothing to the square-foot total.</li>
+      <li><b>Excluded items:</b> <span id="excl"></span></li>
+      <li><b>Baseline:</b> the county data center dashboard listed 15 pending data center campuses (Sep 22 reporting; planned GFA total shown above). Three of them (Digital Gateway North and South, Compass) are void. The Circuit Court ruling took effect Sep 15, 2025 and was affirmed by the Virginia Court of Appeals on Mar 31, 2026. The county layer cites a Court of Appeals order dated Jul 29, 2026.</li>
+      <li><b>Key dates:</b> The Planning Commission first heard the amendment on Jul 15, 2026. That hearing was redone because some public notice materials did not include its time and place. The properly noticed hearing was Sep 9, 2026, when the commission recommended a 120-day window. The Board adopted the amendment 8-0 with a 90-day window on Sep 22, 2026 (Ord. No. 26-67). The window closes at 11:59 PM on Dec 21, 2026.</li>
+      <li><b>Not included:</b> applicant names and megawatts, which are generally not published. A data center plan whose description does not say "data center" may be missed until it appears in county GIS.</li>
+      <li><b>Sources:</b> <a href="https://egcss.pwcgov.org/SelfService#/home">PWC ePortal (permit portal)</a>; county GIS <a href="https://gisweb.pwcva.gov/arcgis/rest/services/Planning/Build_Out_Analysis/MapServer">Build-Out Analysis</a> and <a href="https://gisweb.pwcva.gov/arcgis/rest/services/CountyMapper/LandDevelopment/MapServer/2">Pending Planning Cases</a> layers; <a href="https://www.pwcva.gov/department/planning-office/dpa2026-00006-data-center-opportunity-zone-overlay-district-dcozod">County DPA2026-00006 page</a>; reporting by Prince William Times, InsideNoVa, Potomac Local and WTOP.</li>
+    </ul>
+  </div>
+  <footer>Last updated: <span id="updated"></span>. Data: <a href="data.json">data.json</a>.</footer>
+</main>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  "use strict";
+  const DEAD = new Date("2026-12-21T23:59:00-05:00");
+  const C = { br: "#1f5f99", leg: "#e08a1e", sq: "#2e7d4f", win: "#e3edf7", ink: "#1d1d1f", muted: "#5b5b60", grid: "#ececef" };
+  const fmt = n => n == null ? "" : Math.round(n).toLocaleString("en-US");
+  const fmtM = n => (n / 1e6).toFixed(1) + "M";
+  const el = (tag, attrs, text) => { const e = document.createElement(tag); for (const k in (attrs||{})) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; };
+  const sv = (tag, attrs) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  const pDate = s => { const [y,m,d] = s.split("-").map(Number); return new Date(Date.UTC(y, m-1, d)); };
+  const md = d => d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+
+  // countdown (runs even if data fails)
+  function tick() {
+    let ms = DEAD - new Date();
+    const ids = ["cd-d","cd-h","cd-m","cd-s"];
+    if (ms <= 0) { ids.forEach(i => document.getElementById(i).textContent = "0"); document.getElementById("cd-note").textContent = "The 90-day window has closed."; return; }
+    const d = Math.floor(ms / 864e5); ms -= d*864e5; const h = Math.floor(ms/36e5); ms -= h*36e5; const m = Math.floor(ms/6e4); ms -= m*6e4; const s = Math.floor(ms/1e3);
+    [d, h, m, s].forEach((v, i) => document.getElementById(ids[i]).textContent = i ? String(v).padStart(2,"0") : v);
+  }
+  tick(); setInterval(tick, 1000);
+
+  function start(D) {
+    document.getElementById("updated").textContent = D.updated;
+    document.getElementById("updated-top").textContent = "Last updated " + D.updated + ".";
+    const S = D.stats;
+    const stats = [[S.filings, "filings counted"], [S.by_right, "by-right site plans"], [S.legislative, "legislative / substation review"],
+                   [fmtM(S.known_sqft) , "known sq ft (" + S.with_sqft + " of " + S.filings + " filings have a published size)"],
+                   [S.baseline_pending, "pending campuses before window (county dashboard)"], [fmtM(S.baseline_sqft), "sq ft planned in those " + S.baseline_pending]];
+    const box = document.getElementById("stats");
+    stats.forEach(([v, k]) => { const c = el("div", { class: "card stat" }); c.append(el("div", { class: "v" }, String(v)), el("div", { class: "k" }, k)); box.append(c); });
+
+    const ex = D.filings.filter(f => f.excluded);
+    document.getElementById("excl").textContent = ex.length ? ex.map(f => f.app_number + " (" + f.project + "): " + f.notes.split(". ")[0].replace(/^EDGE CASE:\s*/, "") + ".").join(" ") : "none.";
+
+    const counted = D.filings.filter(f => !f.excluded).sort((a, b) => a.filed_date.localeCompare(b.filed_date));
+    let view = "f";
+    const chartBox = document.getElementById("chart"), tip = document.getElementById("tip");
+
+    function legend() {
+      const L = document.getElementById("legend"); L.textContent = "";
+      const items = view === "f" ? [[C.br, "By-right site plans"], [C.leg, "Legislative (SUP) & substation review"]] : [[C.sq, "Known sq ft"]];
+      items.forEach(([c, t]) => { const s = el("span"); const i = el("i"); i.style.background = c; s.append(i, document.createTextNode(t)); L.append(s); });
+    }
+
+    function draw() {
+      chartBox.querySelectorAll("svg").forEach(s => s.remove());
+      const W = Math.max(320, chartBox.clientWidth), narrow = W < 560;
+      const H = narrow ? 320 : 400, m = { l: narrow ? 40 : 56, r: 14, t: narrow ? 64 : 80, b: 30 };
+      const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Cumulative data center filings chart" });
+      const x0 = pDate(D.window_start).getTime() - 2*864e5, x1 = pDate("2026-12-28").getTime();
+      const now = Date.now(), xEnd = Math.max(x1, now);
+      const X = t => m.l + (t - x0) / (xEnd - x0) * (W - m.l - m.r);
+      const today = Math.min(now, xEnd);
+      // series
+      let br = 0, lg = 0, sq = 0; const pts = [];
+      counted.forEach(f => { if (f.category === "By-right") br++; else lg++; sq += f.sqft || 0; pts.push({ t: pDate(f.filed_date).getTime(), br, lg, sq, f }); });
+      const total = view === "f" ? br + lg : sq;
+      const ymax = view === "f" ? Math.max(4, Math.ceil(total * 1.35 / 4) * 4) : Math.max(4e6, Math.ceil(total * 1.3 / 4e6) * 4e6);
+      const Y = v => H - m.b - v / ymax * (H - m.t - m.b);
+      // window shade
+      const ws = X(pDate("2026-09-22").getTime()), we = X(pDate("2026-12-21").getTime() + 864e5);
+      svg.append(sv("rect", { x: ws, y: m.t, width: we - ws, height: H - m.t - m.b, fill: C.win }));
+      // grid + y labels
+      const steps = 4;
+      for (let i = 0; i <= steps; i++) {
+        let v = ymax * i / steps; if (view === "f") v = Math.round(v);
+        const y = Y(v);
+        svg.append(sv("line", { x1: m.l, x2: W - m.r, y1: y, y2: y, stroke: C.grid }));
+        const t = sv("text", { x: m.l - 6, y: y + 4, "text-anchor": "end", "font-size": 11, fill: C.muted }); t.textContent = view === "f" ? v : (v ? (v/1e6).toFixed(v < 4e6 ? 1 : 0) + "M" : "0"); svg.append(t);
+      }
+      // month ticks
+      for (let mo = 7; mo <= 12; mo++) {
+        const t = Date.UTC(2026, mo, 1); if (t < x0 || t > xEnd) continue;
+        const tx = sv("text", { x: X(t), y: H - m.b + 18, "text-anchor": "middle", "font-size": 11, fill: C.muted });
+        tx.textContent = new Date(t).toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }); svg.append(tx);
+        svg.append(sv("line", { x1: X(t), x2: X(t), y1: H - m.b, y2: H - m.b + 4, stroke: "#999" }));
+      }
+      svg.append(sv("line", { x1: m.l, x2: W - m.r, y1: H - m.b, y2: H - m.b, stroke: "#999" }));
+      // step areas
+      function area(get, color, base) {
+        let d = `M ${X(x0 + 2*864e5)} ${Y(0)}`; let prevTop = 0, prevBase = 0;
+        const segs = [{ t: x0 + 2*864e5, top: 0, base: 0 }].concat(pts.map(p => ({ t: p.t, top: get(p) + (base ? base(p) : 0), base: base ? base(p) : 0 })));
+        let top = `M ${X(segs[0].t)} ${Y(0)}`, bot = [];
+        segs.forEach((s, i) => {
+          if (i) top += ` L ${X(s.t)} ${Y(segs[i-1].top)} L ${X(s.t)} ${Y(s.top)}`;
+          bot.push([s.t, s.base]);
+        });
+        top += ` L ${X(today)} ${Y(segs[segs.length-1].top)}`;
+        let back = ` L ${X(today)} ${Y(segs[segs.length-1].base)}`;
+        for (let i = bot.length - 1; i >= 0; i--) { back += ` L ${X(bot[i][0])} ${Y(bot[i][1])}`; if (i) back += ` L ${X(bot[i][0])} ${Y(bot[i-1][1])}`; }
+        svg.append(sv("path", { d: top + back + " Z", fill: color, opacity: .9 }));
+      }
+      if (view === "f") { area(p => p.br, C.br); area(p => p.lg, C.leg, p => p.br); }
+      else area(p => p.sq, C.sq);
+      // milestones
+      D.milestones.forEach((ms, i) => {
+        const x = X(pDate(ms.date).getTime() + (ms.date === "2026-12-21" ? 864e5 : 0));
+        svg.append(sv("line", { x1: x, x2: x, y1: m.t - 4, y2: H - m.b, stroke: "#333", "stroke-width": 1.1, "stroke-dasharray": ms.date === "2026-09-22" ? "" : "4 3" }));
+        const right = ms.date === "2026-09-09" || ms.date === "2026-12-21";
+        const lines = narrow ? [ms.label.split(":")[0]] : [ms.label.split(": ")[0] + ":", ms.label.split(": ")[1]];
+        const lowRow = ms.date === "2026-09-09" || ms.date === "2026-09-22";
+        const yBase = narrow ? (i % 2 ? m.t - 26 : m.t - 10) : (lowRow ? m.t - 24 : m.t - 58);
+        lines.forEach((ln, j) => { const t = sv("text", { x: x + (right ? -4 : 4), y: yBase + j*14, "text-anchor": right ? "end" : "start", "font-size": narrow ? 10.5 : 11.5, fill: C.ink }); t.textContent = ln; svg.append(t); });
+      });
+      // today line
+      if (now < x1) { const x = X(now); svg.append(sv("line", { x1: x, x2: x, y1: m.t, y2: H - m.b, stroke: "#b22222", "stroke-width": 1.3 })); const t = sv("text", { x: x + 4, y: m.t + 12, "font-size": 11, fill: "#b22222" }); t.textContent = "Today"; svg.append(t); }
+      // end label
+      const lab = sv("text", { x: X(today) + 6, y: Y(total) + 4, "font-size": 12.5, "font-weight": 700, fill: view === "f" ? C.ink : C.sq });
+      lab.textContent = view === "f" ? `${total} filings` : `${fmtM(total)} sq ft`; svg.append(lab);
+      // hover targets (one per filing)
+      pts.forEach((p, i) => {
+        const v = view === "f" ? p.br + p.lg : p.sq;
+        const cx = X(p.t), cy = Y(v);
+        const dot = sv("circle", { cx, cy, r: 4.5, fill: "#fff", stroke: view === "f" ? (p.f.category === "By-right" ? C.br : C.leg) : C.sq, "stroke-width": 2, tabindex: 0 });
+        const hit = sv("circle", { cx, cy, r: 13, fill: "transparent", style: "cursor:pointer" });
+        const show = ev => {
+          tip.textContent = "";
+          tip.append(el("b", null, p.f.project));
+          [p.f.app_number + " · " + p.f.app_type, "Filed " + md(pDate(p.f.filed_date)) + " · " + p.f.category,
+           p.f.sqft ? fmt(p.f.sqft) + " sq ft" : "Sq ft not published", "Cumulative: " + (view === "f" ? (p.br + p.lg) + " filings" : fmt(p.sq) + " sq ft")]
+            .forEach(s => tip.append(el("div", null, s)));
+          tip.style.display = "block";
+          const bx = chartBox.getBoundingClientRect(), scale = bx.width / W;
+          let left = cx * scale + 12, top = cy * scale - 10;
+          if (left + 260 > bx.width) left = cx * scale - 12 - Math.min(260, tip.offsetWidth);
+          tip.style.left = Math.max(0, left) + "px"; tip.style.top = Math.max(0, top) + "px";
+        };
+        [hit, dot].forEach(e => { e.addEventListener("mouseenter", show); e.addEventListener("focus", show); e.addEventListener("click", show); e.addEventListener("mouseleave", () => tip.style.display = "none"); e.addEventListener("blur", () => tip.style.display = "none"); });
+        svg.append(dot, hit);
+      });
+      // countdown label inside window
+      const daysLeft = Math.max(0, Math.floor((DEAD - now) / 864e5));
+      const wl = sv("text", { x: we - 8, y: m.t + 18, "text-anchor": "end", "font-size": narrow ? 11.5 : 13, "font-weight": 700, fill: C.br });
+      wl.textContent = daysLeft ? `${daysLeft} days remaining` : "Window closed"; svg.append(wl);
+      chartBox.insertBefore(svg, tip);
+    }
+
+    function setView(v) { view = v; document.getElementById("v-f").setAttribute("aria-pressed", v === "f"); document.getElementById("v-s").setAttribute("aria-pressed", v === "s"); tip.style.display = "none"; legend(); draw(); }
+    document.getElementById("v-f").onclick = () => setView("f");
+    document.getElementById("v-s").onclick = () => setView("s");
+    let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(draw, 120); });
+    document.addEventListener("click", e => { if (!chartBox.contains(e.target)) tip.style.display = "none"; });
+    setView(location.hash === "#sqft" ? "s" : "f");
+
+    // table
+    const tbody = document.querySelector("#tbl tbody");
+    let sortK = "filed_date", asc = true;
+    function renderTable() {
+      const rows = D.filings.slice().sort((a, b) => {
+        let va = sortK === "src" ? (a.sources[0] || "") : a[sortK], vb = sortK === "src" ? (b.sources[0] || "") : b[sortK];
+        if (sortK === "sqft") { va = va == null ? -1 : va; vb = vb == null ? -1 : vb; return asc ? va - vb : vb - va; }
+        return asc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+      });
+      tbody.textContent = "";
+      rows.forEach(f => {
+        const tr = el("tr", f.excluded ? { class: "excl" } : null);
+        const p = el("td"); p.append(el("div", null, f.project)); p.append(el("div", { class: "small" }, f.app_number + (f.location ? " · " + f.location.split(";")[0] : "")));
+        const cat = el("td"); cat.append(el("span", { class: "pill " + (f.excluded ? "ex" : f.category === "By-right" ? "br" : "leg") }, f.excluded ? "Not counted" : f.category));
+        const src = el("td"); f.sources.forEach((u, i) => { const a = el("a", { href: u, target: "_blank", rel: "noopener" }, u.includes("egcss") ? "ePortal" : u.includes("gisweb") ? "County GIS" : u.includes("princewilliamtimes") ? "PW Times" : u.includes("insidenova") ? "InsideNoVa" : "Link " + (i + 1)); if (i) src.append(document.createTextNode(" · ")); src.append(a); });
+        tr.append(p, el("td", null, f.app_type), el("td", { class: "num" }, md(pDate(f.filed_date))), el("td", { class: "num" }, f.sqft ? fmt(f.sqft) : "—"), cat, el("td", null, f.status), src);
+        tr.title = f.notes; tbody.append(tr);
+      });
+      document.querySelectorAll("#tbl th").forEach(th => th.removeAttribute("aria-sort"));
+      document.querySelector(`#tbl th[data-k="${sortK}"]`).setAttribute("aria-sort", asc ? "ascending" : "descending");
+    }
+    document.querySelectorAll("#tbl th").forEach(th => th.addEventListener("click", () => { const k = th.dataset.k; asc = sortK === k ? !asc : true; sortK = k; renderTable(); }));
+    renderTable();
+  }
+
+  if (window.TRACKER_DATA) start(window.TRACKER_DATA);
+  else fetch("data.json").then(r => r.json()).then(start).catch(() => { document.getElementById("stats").textContent = "Data failed to load."; });
+})();
+</script>
+</body>
+</html>
