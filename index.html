@@ -39,6 +39,10 @@
   th { position:sticky; top:0; background:#f3f3f5; cursor:pointer; white-space:nowrap; user-select:none; }
   th[aria-sort="ascending"]::after { content:" ▲"; font-size:.7em; } th[aria-sort="descending"]::after { content:" ▼"; font-size:.7em; }
   td.num { text-align:right; font-variant-numeric: tabular-nums; white-space:nowrap; }
+  tr.hl td { animation: hlflash 3.2s ease-out; }
+  @keyframes hlflash { 0%,55% { background:#fff1a8; box-shadow: inset 0 0 0 2px #e0a800; } 100% { background:transparent; box-shadow:none; } }
+  tbody tr { scroll-margin-top: 48px; }
+  .anchor { color:inherit; text-decoration:none; } .anchor:hover::after { content:" #"; color:var(--muted); }
   tr.excl td { color:#8a8a8f; background:#fbfbfb; }
   .pill { display:inline-block; padding:1px 8px; border-radius:999px; font-size:.75rem; color:#fff; white-space:nowrap; }
   .pill.br { background:var(--br); } .pill.leg { background:var(--leg); } .pill.ex { background:#9a9aa0; }
@@ -112,6 +116,10 @@
   const el = (tag, attrs, text) => { const e = document.createElement(tag); for (const k in (attrs||{})) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; };
   const sv = (tag, attrs) => { const e = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
   const pDate = s => { const [y,m,d] = s.split("-").map(Number); return new Date(Date.UTC(y, m-1, d)); };
+  // Stable per-filing anchor: lowercased case number (e.g. "spr2027-00028"), falling back to a slug of the project name.
+  // Derived from the data at render time, so it survives every weekly data refresh.
+  const slugify = t => String(t || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const slugOf = f => slugify(f.app_number) || slugify(f.project);
   const md = d => d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 
   // countdown (runs even if data fails)
@@ -258,8 +266,8 @@
       });
       tbody.textContent = "";
       rows.forEach(f => {
-        const tr = el("tr", f.excluded ? { class: "excl" } : null);
-        const p = el("td"); p.append(el("div", null, f.project)); p.append(el("div", { class: "small" }, f.app_number + (f.location ? " · " + f.location.split(";")[0] : "")));
+        const tr = el("tr", Object.assign({ id: slugOf(f) }, f.excluded ? { class: "excl" } : {}));
+        const p = el("td"); { const pj = el("div"); pj.append(el("a", { class: "anchor", href: "#" + slugOf(f), title: "Link to this filing" }, f.project)); p.append(pj); } p.append(el("div", { class: "small" }, f.app_number + (f.location ? " · " + f.location.split(";")[0] : "")));
         const cat = el("td"); cat.append(el("span", { class: "pill " + (f.excluded ? "ex" : f.category === "By-right" ? "br" : "leg") }, f.excluded ? "Not counted" : f.category));
         const src = el("td"); f.sources.forEach((u, i) => { const a = el("a", { href: u, target: "_blank", rel: "noopener" }, u.includes("egcss") ? "ePortal" : u.includes("gisweb") ? "County GIS" : u.includes("princewilliamtimes") ? "PW Times" : u.includes("insidenova") ? "InsideNoVa" : "Link " + (i + 1)); if (i) src.append(document.createTextNode(" · ")); src.append(a); });
         tr.append(p, el("td", null, f.app_type), el("td", { class: "num" }, md(pDate(f.filed_date))), el("td", { class: "num" }, f.sqft ? fmt(f.sqft) : "—"), cat, el("td", null, f.status), src);
@@ -270,6 +278,24 @@
     }
     document.querySelectorAll("#tbl th").forEach(th => th.addEventListener("click", () => { const k = th.dataset.k; asc = sortK === k ? !asc : true; sortK = k; renderTable(); }));
     renderTable();
+
+    // Deep links: #<slug> scrolls to and briefly highlights that filing. Runs after the table is rendered and on hashchange.
+    // The table is never filtered (not-counted rows are shown greyed), so the target is always present; if a future
+    // version hides rows, un-hide here before scrolling. "#sqft" is the existing chart-view switch, not a filing.
+    function goToHash() {
+      const id = decodeURIComponent(location.hash.slice(1)).toLowerCase();
+      if (!id) return;
+      if (id === "sqft") { setView("s"); return; }
+      const tr = document.getElementById(id);
+      if (!tr || tr.tagName !== "TR") return;
+      tr.classList.remove("hl"); void tr.offsetWidth; tr.classList.add("hl");
+      tr.scrollIntoView({ behavior: "auto", block: "center" });
+      setTimeout(() => tr.classList.remove("hl"), 3400);
+    }
+    window.addEventListener("hashchange", () => { if (location.hash.toLowerCase() === "#sqft") setView("s"); else goToHash(); });
+    goToHash();
+    // layout can shift after fonts/chart settle; re-center once after load
+    window.addEventListener("load", () => { const t = document.getElementById(decodeURIComponent(location.hash.slice(1)).toLowerCase()); if (t && t.tagName === "TR") t.scrollIntoView({ block: "center" }); });
   }
 
   if (window.TRACKER_DATA) start(window.TRACKER_DATA);
