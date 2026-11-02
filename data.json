@@ -1,6 +1,6 @@
 {
- "updated": "2026-10-26 08:22 EDT",
- "updated_iso": "2026-10-26T08:22:31-04:00",
+ "updated": "2026-11-02 08:21 EST",
+ "updated_iso": "2026-11-02T08:21:48-05:00",
  "window_start": "2026-07-15",
  "deadline_iso": "2026-12-21T23:59:00-05:00",
  "milestones": [
@@ -192,13 +192,13 @@
    "app_type": "Final site plan (by-right)",
    "app_number": "SPR2027-00078",
    "filed_date": "2026-09-09",
-   "status": "Pending",
+   "status": "Awaiting Fees",
    "category": "By-right",
    "sources": [
     "https://egcss.pwcgov.org/SelfService#/home",
     "https://gisweb.pwcva.gov/arcgis/rest/services/Planning/Build_Out_Analysis/MapServer/9"
    ],
-   "notes": "Underlying zoning case is REZ2020-00010. Related Amazon Data Services proffer amendment REZ2026-00039 (filed 2026-05-01) is pre-window and counted in the baseline 15. sqft and acreage are county GIS planned figures.",
+   "notes": "Underlying zoning case is REZ2020-00010. Related Amazon Data Services proffer amendment REZ2026-00039 (filed 2026-05-01) is pre-window and counted in the baseline 15. sqft and acreage are county GIS planned figures. ePortal status changed Pending -> Awaiting Fees between the 2026-10-26 and 2026-11-02 snapshots (ePortal ExpireDate 2026-10-28).",
    "excluded": false
   },
   {
