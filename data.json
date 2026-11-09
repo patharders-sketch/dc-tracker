@@ -1,6 +1,6 @@
 {
- "updated": "2026-11-09 06:14 MST",
- "updated_iso": "2026-11-09T06:14:38-07:00",
+ "updated": "2026-11-09 06:17 MST",
+ "updated_iso": "2026-11-09T06:17:04-07:00",
  "window_start": "2026-07-15",
  "deadline_iso": "2026-12-21T23:59:00-05:00",
  "milestones": [
@@ -210,13 +210,13 @@
    "app_type": "Final site plan (by-right)",
    "app_number": "SPR2027-00078",
    "filed_date": "2026-09-09",
-   "status": "Awaiting Fees",
+   "status": "Pending",
    "category": "By-right",
    "sources": [
     "https://egcss.pwcgov.org/SelfService#/home",
     "https://gisweb.pwcva.gov/arcgis/rest/services/Planning/Build_Out_Analysis/MapServer/9"
    ],
-   "notes": "Underlying zoning case is REZ2020-00010. Related Amazon Data Services proffer amendment REZ2026-00039 (filed 2026-05-01) is pre-window and counted in the baseline 15. sqft and acreage are county GIS planned figures. ePortal status changed Pending -> Awaiting Fees between the 2026-10-26 and 2026-11-02 snapshots (ePortal ExpireDate 2026-10-28).",
+   "notes": "Underlying zoning case is REZ2020-00010. Related Amazon Data Services proffer amendment REZ2026-00039 (filed 2026-05-01) is pre-window and counted in the baseline 15. sqft and acreage are county GIS planned figures. ePortal status changed Pending -> Awaiting Fees between the 2026-10-26 and 2026-11-02 snapshots (ePortal ExpireDate 2026-10-28). Status check 2026-11-09: ePortal CaseStatus changed back from Awaiting Fees to Pending; ExpireDate extended from 2026-10-28 to 2026-12-28.",
    "record_url": "https://egcss.pwcgov.org/SelfService#/plan/68447a05-d5cd-46ab-883a-9cef8249dd61",
    "excluded": false
   },
@@ -280,6 +280,28 @@
    ],
    "notes": "EDGE CASE: submitted 2026-06-29, before the window, but still 'Awaiting Fees' as of 2026-10-09. Per Venable, acceptance happens when initial fees are paid, so acceptance could still fall inside the window. County GIS created the record 2026-07-16. Excluded from window totals.",
    "record_url": "https://egcss.pwcgov.org/SelfService#/plan/b795ca56-9960-47aa-866a-3762d7ea70e2",
+   "excluded": true
+  },
+  {
+   "project": "Wellington Glen Technology Park Phase 3 (data center)",
+   "applicant": "",
+   "location": "7728 Wellington Rd, Manassas; Brentsville District; inside DCOZOD; PMD",
+   "district": "Brentsville",
+   "acreage": null,
+   "sqft": null,
+   "mw": null,
+   "app_type": "Final site plan (by-right)",
+   "app_number": "SPR2027-00121",
+   "filed_date": "2026-11-05",
+   "status": "Awaiting Fees",
+   "category": "By-right",
+   "sources": [
+    "https://egcss.pwcgov.org/SelfService#/home",
+    "https://gisweb.pwcva.gov/arcgis/rest/services/Planning/Build_Out_Analysis/MapServer/10",
+    "https://gisweb.pwcva.gov/arcgis/rest/services/Planning/Build_Out_Analysis/MapServer/9"
+   ],
+   "notes": "Awaiting Fees as of the 2026-11-09 ePortal snapshot, so it is not counted yet. Per Venable, acceptance occurs once initial submission fees are paid. filed_date = ePortal ApplyDate (submission). It is a by-right final site plan for a proposed data center building with associated infrastructure at GPIN 7596-54-4132. County GIS lists the Wellington Glen Technology Park campus (REZ2024-00018, Planned, DCOOD Yes) at 27.73 ac with 673,198 planned GFA, and one planned building at this GPIN (listed as 11750 Stone Crop Dr) with 475,000 GFA sourced from Proffer, not Site Plan. Those figures are not used as this filing's square footage. Phase 2 at the same address is SPR2026-00138 (ApplyDate 2025-10-29, pre-window). Underlying rezoning REZ2024-00018 was filed 2023-12-05 (approved; pre-window). Applicant is not shown in public search results.",
+   "record_url": "https://egcss.pwcgov.org/SelfService#/plan/3e6af82b-af08-45f2-b0e8-ebff1632ecf8",
    "excluded": true
   }
  ],
