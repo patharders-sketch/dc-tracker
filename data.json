@@ -1,6 +1,6 @@
 {
- "updated": "2026-11-16 08:12 EST",
- "updated_iso": "2026-11-16T08:12:14-05:00",
+ "updated": "2026-11-23 08:13 EST",
+ "updated_iso": "2026-11-23T08:13:56-05:00",
  "window_start": "2026-07-15",
  "deadline_iso": "2026-12-21T23:59:00-05:00",
  "milestones": [
@@ -22,9 +22,9 @@
   }
  ],
  "stats": {
-  "filings": 8,
+  "filings": 9,
   "by_right": 6,
-  "legislative": 2,
+  "legislative": 3,
   "known_sqft": 10721929.0,
   "with_sqft": 7,
   "baseline_pending": 15,
@@ -75,6 +75,27 @@
    "excluded": true
   },
   {
+   "project": "Manassas Tech Park II Rezoning (data center uses)",
+   "applicant": "",
+   "location": "9251 Industrial Ct and adjoining parcels, Manassas; Brentsville District; inside DCOZOD",
+   "district": "Brentsville",
+   "acreage": 53.5,
+   "sqft": null,
+   "mw": null,
+   "app_type": "Rezoning - Mixed Use (M-2/M-1/M-T to M-1 for data center uses)",
+   "app_number": "REZ2027-00015",
+   "filed_date": "2026-11-19",
+   "status": "Under Review",
+   "category": "Legislative / substation",
+   "sources": [
+    "https://egcss.pwcgov.org/SelfService#/home",
+    "https://gisweb.pwcva.gov/arcgis/rest/services/CountyMapper/LandDevelopment/MapServer/2"
+   ],
+   "notes": "filed_date = ePortal ApplyDate (2026-11-19). Status is Under Review (not Awaiting Fees). Application text: rezone \u00b153.5 acres from M-2, M-1, and M/T to M-1 for data center uses; inside DCOZOD, E-Commerce Overlay, and Airport Safety Overlay; Brentsville District. Acreage is the application's \u00b153.5 figure; the pending planning-case GIS layer lists 51.17 ac. No published square footage (staff report not yet posted as of 2026-11-23; existing GIS campus GFA under REZ1985-0048 is not used). Applicant is not shown in public search results. Related excluded site plan SPR2026-00406 (Manassas Tech Park II South, still Awaiting Fees) covers part of this area.",
+   "record_url": "https://egcss.pwcgov.org/SelfService#/plan/3b8a4544-cce6-45ad-8afd-aad12cc95721",
+   "excluded": false
+  },
+  {
    "project": "Gardner Property SUP (5 data centers + substation)",
    "applicant": "JK Land Holdings",
    "location": "14414 McGraws Corner Dr, Gainesville; GIS lists Brentsville District (InsideNoVa calls it Gainesville District); OUTSIDE DCOZOD",
@@ -85,7 +106,7 @@
    "app_type": "Special Use Permit (companion to rezoning REZ2023-00018)",
    "app_number": "SUP2027-00008",
    "filed_date": "2026-09-24",
-   "status": "Under Review",
+   "status": "Pending",
    "category": "Legislative / substation",
    "sources": [
     "https://egcss.pwcgov.org/SelfService#/home",
@@ -389,7 +410,7 @@
    "filed_date": "2023-03-22",
    "district": "Brentsville",
    "sqft": 2017100,
-   "status": "Under Review",
+   "status": "Pending",
    "void": false,
    "in_dcozod": "No",
    "record_url": "https://egcss.pwcgov.org/SelfService#/plan/54197449-7161-4168-861a-d85676a180a3",
